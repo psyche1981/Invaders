@@ -1,47 +1,67 @@
-#include <SFML/Audio.hpp>
-#include <SFML/Graphics.hpp>
+#include <iostream>
+#include <chrono>
+#include<SFML/Graphics.hpp>
+
+#include "GSM.h"
+#include "Resources.h"
+
+class Window
+{
+public:
+	Window(int width, int height, const std::string& title)
+		:
+		_window(sf::VideoMode(width, height), title),
+		_gsm()
+	{
+		Resources::LoadFonts();
+		Resources::LoadImages();
+	}
+
+	virtual ~Window() {}
+
+	void Loop()
+	{
+		auto tp = std::chrono::steady_clock::now();
+		sf::Event event;
+
+		while (_window.isOpen())
+		{
+
+			while (_window.pollEvent(event))
+			{
+				if (event.type == sf::Event::Closed)
+					_window.close();
+
+				_gsm.Input(event);
+			}
+
+			float dt;
+			{
+				const auto new_tp = std::chrono::steady_clock::now();
+				dt = std::chrono::duration<float>(new_tp - tp).count();
+				tp = new_tp;
+			}
+
+			_window.clear();
+
+
+
+			_gsm.Update(dt);
+
+			_gsm.Draw(&_window);
+
+			_window.display();
+		}
+	}
+
+private:
+	sf::RenderWindow _window;
+	GSM _gsm;
+};
+
 int main()
 {
-	// Create the main window
-	sf::RenderWindow window(sf::VideoMode(800, 600), "SFML window");
-	// Load a sprite to display
-	sf::Texture texture;
-	if (!texture.loadFromFile("NS.png"))
-		return EXIT_FAILURE;
-	sf::Sprite sprite(texture);
-	sprite.move(400.0f, 300.0f);
-	// Create a graphical text to display
-	sf::Font font;
-	if (!font.loadFromFile("space_invaders.ttf"))
-		return EXIT_FAILURE;
-	sf::Text text("Hello SFML", font, 50);
-	sf::Color red(255, 0, 0, 255);
-	text.setFillColor(red);
-	// Load a music to play
-	//sf::Music music;
-	//if (!music.openFromFile("nice_music.ogg"))
-	//	return EXIT_FAILURE;
-	//// Play the music
-	//music.play();
-	// Start the game loop
-	while (window.isOpen())
-	{
-		// Process events
-		sf::Event event;
-		while (window.pollEvent(event))
-		{
-			// Close window: exit
-			if (event.type == sf::Event::Closed)
-				window.close();
-		}
-		// Clear screen
-		window.clear();
-		// Draw the sprite
-		window.draw(sprite);
-		// Draw the string
-		window.draw(text);
-		// Update the window
-		window.display();
-	}
-	return EXIT_SUCCESS;
+	Window wnd(800, 600, "Space Invaders");
+	wnd.Loop();
+	return 0;
 }
