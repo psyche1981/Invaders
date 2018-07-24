@@ -59,8 +59,10 @@ void TitleScreen::Input(sf::Event event)
 
 GameState::GameState(GSM* gsm)
 	:
-	State(gsm)
+	State(gsm),
+	_player()
 {
+	
 }
 
 GameState::~GameState()
@@ -76,6 +78,11 @@ void GameState::Draw(sf::RenderWindow* wnd)
 {
 	sf::Text scoreText("Score: ", Resources::getFont("SpaceInvaders"), 20);
 	wnd->draw(scoreText);
+
+
+	//temp
+	_player.Draw(wnd);
+
 }
 
 void GameState::Input(sf::Event event)

@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "Resources.h"
+#include "Entity.h"
 class GSM;
 
 class State
@@ -41,5 +42,7 @@ public:
 	void Update(float dt) override;
 	void Draw(sf::RenderWindow* wnd) override;
 	void Input(sf::Event event) override;
+
+	Player _player;
 };
 
