@@ -26,6 +26,7 @@ protected:
 	rect _boundingBox;
 	vec2f _vel;
 
+
 	//temp drawing stuff
 	sf::RectangleShape _rec;
 };
@@ -68,7 +69,7 @@ private:
 class Alien : public Entity
 {
 public:
-	Alien(vec2f pos, vec2f size);
+	Alien(vec2f pos, vec2f size, Resources::AlienType type);
 	virtual ~Alien();
 
 	void Update(float dt);
@@ -79,7 +80,12 @@ public:
 	void SetVelocity(float xVel, float yPos);
 	bool ReachedBottom();
 	const float GetXVel();
+	const int GetScoreValue();
+
+	bool hit();
 
 private:
-
+	Resources::AlienType _type;
+	int _scoreValue;
+	int _hitPoints;
 };

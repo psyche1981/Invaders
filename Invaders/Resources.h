@@ -31,6 +31,14 @@ public:
 	static constexpr float ALIENSPEED = 25.0f;
 	static constexpr float DELAYFACTOR = 0.75f;
 	static constexpr float ALIENYINCREMENT = 30.0f;
+
+	enum AlienType
+	{
+		FIRST,
+		SECOND,
+		THIRD
+	};
+
 private:	
 	Resources() {}
 	~Resources() {}

@@ -101,13 +101,32 @@ void Player::ConfineToScreen()
 		_pos.x = Resources::SCREENWIDTH - _boundingBox.width;
 }
 
-Alien::Alien(vec2f pos, vec2f size)
+Alien::Alien(vec2f pos, vec2f size,Resources::AlienType type)
 	:
-	Entity(pos, size)
+	Entity(pos, size),
+	_type(type)
 {
+	switch (_type)
+	{
+	case Resources::AlienType::FIRST:
+		_hitPoints = 1;
+		_scoreValue = 20;
+		_rec.setFillColor(sf::Color::White);
+		break;
+	case Resources::AlienType::SECOND:
+		_hitPoints = 2;
+		_scoreValue = 40;
+		_rec.setFillColor(sf::Color::Blue);
+		break;
+	case Resources::AlienType::THIRD:
+		_hitPoints = 3;
+		_scoreValue = 60;
+		_rec.setFillColor(sf::Color::Green);
+		break;
+	}
 	_vel.x = Resources::ALIENSPEED;
 	_rec.setPosition(_pos);
-	_rec.setFillColor(sf::Color::White);
+	
 }
 
 Alien::~Alien()
@@ -152,6 +171,17 @@ bool Alien::ReachedBottom()
 const float Alien::GetXVel()
 {
 	return _vel.x;
+}
+
+const int Alien::GetScoreValue()
+{
+	return _scoreValue;
+}
+
+bool Alien::hit()
+{
+	_hitPoints -= 1;
+	return _hitPoints == 0;
 }
 
 Bullet::Bullet(vec2f pos)

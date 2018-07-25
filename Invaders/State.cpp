@@ -67,10 +67,20 @@ GameState::GameState(GSM* gsm)
 	//_entities.emplace_back(std::make_unique<Alien>(vec2f(500.0f, 100.0f), vec2f(Resources::ALIENSIZE, Resources::ALIENSIZE)));
 	for (int i = 0; i < 10; i++)
 	{
-		for (int j = 0; j < 4; j++)
+		_aliens.emplace_back(std::make_unique<Alien>(vec2f(100.0f + i * 60.0f, 100.0f), vec2f(Resources::ALIENSIZE, Resources::ALIENSIZE), Resources::AlienType::THIRD));
+
+	}
+	for (int i = 0; i < 10; i++)
+	{
+		for (int j = 0; j < 2; j++)
 		{
-			_aliens.emplace_back(std::make_unique<Alien>(vec2f(100.0f + i * 60.0f, 100.0f + j * 60.0f), vec2f(Resources::ALIENSIZE, Resources::ALIENSIZE)));
-		}
+			_aliens.emplace_back(std::make_unique<Alien>(vec2f(100.0f + i * 60.0f, 160.0f + j * 60.0f), vec2f(Resources::ALIENSIZE, Resources::ALIENSIZE), Resources::AlienType::SECOND));
+		}		
+	}
+	for (int i = 0; i < 10; i++)
+	{
+		_aliens.emplace_back(std::make_unique<Alien>(vec2f(100.0f + i * 60.0f, 280.0f), vec2f(Resources::ALIENSIZE, Resources::ALIENSIZE), Resources::AlienType::FIRST));
+
 	}
 
 }
@@ -203,8 +213,12 @@ void GameState::CheckBulletCollision()
 			}
 		}
 		if (collided)
-		{
-			aIt = _aliens.erase(aIt);
+		{			
+			if ((*aIt)->hit())
+			{
+				_score += (*aIt)->GetScoreValue();
+				aIt = _aliens.erase(aIt);
+			}			
 			break;
 		}
 		else
