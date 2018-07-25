@@ -52,6 +52,7 @@ private:
 
 	float _updateDelay;
 	bool _gameover = false;
+	int _score = 0;
 
 	void UpdateAliens(float dt);
 };

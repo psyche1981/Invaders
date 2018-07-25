@@ -102,7 +102,8 @@ void GameState::Update(float dt)
 
 void GameState::Draw(sf::RenderWindow* wnd)
 {
-	sf::Text scoreText("Score: ", Resources::getFont("SpaceInvaders"), 20);
+	std::string s = "Score:  " + std::to_string(_score);
+	sf::Text scoreText(s, Resources::getFont("SpaceInvaders"), 20);
 	wnd->draw(scoreText);
 
 	_player->Draw(wnd);

@@ -57,4 +57,5 @@ public:
 	const float GetXVel();
 
 private:
+
 };
