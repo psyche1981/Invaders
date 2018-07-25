@@ -193,7 +193,7 @@ Bullet::Bullet(vec2f pos)
 
 Bullet::~Bullet()
 {
-	std::cout << "Bullet Died" << std::endl;
+	
 }
 
 void Bullet::Update(float dt)

@@ -98,9 +98,7 @@ void GameState::Update(float dt)
 		elapsed += dt;
 
 		if (elapsed > _updateDelay)
-		{
-			std::cout << "Player x: " << _player->GetPos().x << "; Player y: " << _player->GetPos().y << std::endl;
-			std::cout << "Alien left: " << _aliens[0]->GetBox().left << "; Alien top: " << _aliens[0]->GetBox().top << "; Alien t + h: " << _aliens[0]->GetBox().top + _aliens[0]->GetBox().height << std::endl;
+		{			
 			UpdateAliens(dt);
 			elapsed = 0.0f;
 		}
@@ -173,7 +171,6 @@ void GameState::UpdateAliens(float dt)
 	{
 		if (CheckPlayerCollision((*it)->GetBox()))
 		{
-			std::cout << "Player Collision" << std::endl;
 			_gameover = true;
 		}
 		//has alien reached the sides of screen?
