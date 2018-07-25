@@ -6,7 +6,7 @@
 #include "Resources.h"
 
 typedef sf::Vector2f vec2f;
-typedef sf::Rect<float> rect;
+typedef sf::Rect<float> Rect;
 
 class Entity
 {
@@ -19,11 +19,11 @@ public:
 	virtual void Input(sf::Event event) = 0;
 
 	const vec2f& GetPos();
-	const rect& GetBox();
+	const Rect& GetBox();
 
 protected:
 	vec2f _pos;
-	rect _boundingBox;
+	Rect _boundingBox;
 	vec2f _vel;
 
 	sf::Sprite _sprite;

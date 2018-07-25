@@ -66,19 +66,19 @@ GameState::GameState(GSM* gsm)
 	//_entities.emplace_back(std::make_unique<Alien>(vec2f(500.0f, 100.0f), vec2f(Resources::ALIENSIZE, Resources::ALIENSIZE)));
 	for (int i = 0; i < 9; i++)
 	{
-		_aliens.emplace_back(std::make_unique<Alien>(vec2f(100.0f + i * 70.0f, 60.0f), vec2f(Resources::ALIENSIZE, Resources::ALIENSIZE), Resources::AlienType::THIRD));
+		//_aliens.emplace_back(std::make_unique<Alien>(vec2f(100.0f + i * 70.0f, 60.0f), vec2f(Resources::ALIENSIZE, Resources::ALIENSIZE), Resources::AlienType::THIRD));
 
 	}
 	for (int i = 0; i < 9; i++)
 	{
 		for (int j = 0; j < 2; j++)
 		{
-			_aliens.emplace_back(std::make_unique<Alien>(vec2f(100.0f + i * 70.0f, 130.0f + j * 70.0f), vec2f(Resources::ALIENSIZE, Resources::ALIENSIZE), Resources::AlienType::SECOND));
+			//_aliens.emplace_back(std::make_unique<Alien>(vec2f(100.0f + i * 70.0f, 130.0f + j * 70.0f), vec2f(Resources::ALIENSIZE, Resources::ALIENSIZE), Resources::AlienType::SECOND));
 		}		
 	}
 	for (int i = 0; i < 9; i++)
 	{
-		_aliens.emplace_back(std::make_unique<Alien>(vec2f(100.0f + i * 70.0f, 270.0f), vec2f(Resources::ALIENSIZE, Resources::ALIENSIZE), Resources::AlienType::FIRST));
+		_aliens.emplace_back(std::make_unique<Alien>(vec2f(100.0f + i * 70.0f, 270.0f), vec2f(34.0f, 41.0f), Resources::AlienType::FIRST));
 	}
 
 }
@@ -99,7 +99,8 @@ void GameState::Update(float dt)
 
 		if (elapsed > _updateDelay)
 		{
-			std::cout << _aliens.size() << std::endl;
+			std::cout << "Player x: " << _player->GetPos().x << "; Player y: " << _player->GetPos().y << std::endl;
+			std::cout << "Alien left: " << _aliens[0]->GetBox().left << "; Alien top: " << _aliens[0]->GetBox().top << "; Alien t + h: " << _aliens[0]->GetBox().top + _aliens[0]->GetBox().height << std::endl;
 			UpdateAliens(dt);
 			elapsed = 0.0f;
 		}
@@ -170,6 +171,11 @@ void GameState::UpdateAliens(float dt)
 	bool velChange = false;
 	for (auto it = _aliens.begin(); it != _aliens.end(); ++it)
 	{
+		if (CheckPlayerCollision((*it)->GetBox()))
+		{
+			std::cout << "Player Collision" << std::endl;
+			_gameover = true;
+		}
 		//has alien reached the sides of screen?
 		if ((*it)->IsOffScreen())
 		{
@@ -182,24 +188,26 @@ void GameState::UpdateAliens(float dt)
 		}		
 	}
 
-
-	for (auto it = _aliens.begin(); it != _aliens.end(); ++it)
+	if (!_gameover)
 	{
-		if (velChange)
+		for (auto it = _aliens.begin(); it != _aliens.end(); ++it)
 		{
-			float xVel = (*it)->GetXVel();
-			(*it)->SetVelocity(0.0f, Resources::ALIENYINCREMENT);
-			if ((*it)->ReachedBottom())
+			if (velChange)
 			{
-				_gameover = true;
-				break;
+				float xVel = (*it)->GetXVel();
+				(*it)->SetVelocity(0.0f, Resources::ALIENYINCREMENT);
+				if ((*it)->ReachedBottom())
+				{
+					_gameover = true;
+					break;
+				}
+				(*it)->Update(dt);
+				(*it)->SetVelocity(-xVel, 0.0f);
 			}
-			(*it)->Update(dt);
-			(*it)->SetVelocity(-xVel, 0.0f);
-		}
-		else
-		{
-			(*it)->Update(dt);
+			else
+			{
+				(*it)->Update(dt);
+			}
 		}
 	}
 }
@@ -237,6 +245,13 @@ void GameState::CheckBulletCollision()
 			++aIt;
 		}
 	}
+}
+
+bool GameState::CheckPlayerCollision(const Rect& box)
+{
+	vec2f pos = _player->GetPos();
+	float width = _player->GetBox().width;
+	return (box.top + box.height > pos.y) && (box.left > pos.x) && box.left < pos.x + width;
 }
 
 GameOverScreen::GameOverScreen(GSM* gsm)

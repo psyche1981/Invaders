@@ -3,7 +3,7 @@
 Entity::Entity(vec2f pos, vec2f size)
 	:
 	_pos(pos),
-	_boundingBox(rect(pos, size)),
+	_boundingBox(Rect(pos, size)),
 	_vel(0.0f, 0.0f),
 	_rec(size)
 {
@@ -20,7 +20,7 @@ const vec2f& Entity::GetPos()
 	return _pos;
 }
 
-const rect & Entity::GetBox()
+const Rect & Entity::GetBox()
 {
 	return _boundingBox;
 }
@@ -131,7 +131,6 @@ Alien::Alien(vec2f pos, vec2f size,Resources::AlienType type)
 
 Alien::~Alien()
 {
-	std::cout << "Alien Died" << std::endl;
 }
 
 void Alien::Update(float dt)

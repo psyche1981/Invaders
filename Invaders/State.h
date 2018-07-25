@@ -57,6 +57,7 @@ private:
 
 	void UpdateAliens(float dt);
 	void CheckBulletCollision();
+	bool CheckPlayerCollision(const Rect& box);
 };
 
 class GameOverScreen : public State
