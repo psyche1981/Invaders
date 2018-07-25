@@ -71,3 +71,14 @@ public:
 
 };
 
+class WinScreen : public State
+{
+public:
+	WinScreen(GSM* gsm);
+	virtual ~WinScreen();
+
+	void Update(float dt) override;
+	void Draw(sf::RenderWindow* wnd) override;
+	void Input(sf::Event event) override;
+};
+

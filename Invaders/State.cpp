@@ -90,30 +90,45 @@ GameState::~GameState()
 }
 
 void GameState::Update(float dt)
-{
-	_player->Update(dt);
-
-	static float elapsed = 0.0f;
-	elapsed += dt;	
-
-	if (elapsed > _updateDelay)
+{	
+	if (!_aliens.empty())
 	{
-		UpdateAliens(dt);
-		elapsed = 0.0f;
+		_player->Update(dt);
+		static float elapsed = 0.0f;
+		elapsed += dt;
+
+		if (elapsed > _updateDelay)
+		{
+			std::cout << _aliens.size() << std::endl;
+			UpdateAliens(dt);
+			elapsed = 0.0f;
+		}
+		for (auto bIt = _bullets.begin(); bIt != _bullets.end();)
+		{
+			(*bIt)->Update(dt);
+			if ((*bIt)->IsOffScreen())
+			{
+				bIt = _bullets.erase(bIt);
+			}
+			else
+			{
+				++bIt;
+			}
+		}
+
+		if (!_bullets.empty() && !_aliens.empty())
+		{
+			CheckBulletCollision();
+		}
+
+		if (_gameover)
+		{
+			_gsm->ChangeState(States::GAMEOVER);
+		}
 	}
-	for (auto& b : _bullets)
+	else
 	{
-		b->Update(dt);
-	}
-
-	if (!_bullets.empty() && !_aliens.empty())
-	{
-		CheckBulletCollision();
-	}	
-
-	if (_gameover)
-	{
-		_gsm->ChangeState(States::GAMEOVER);
+		_gsm->ChangeState(States::WIN);
 	}
 }
 
@@ -159,7 +174,10 @@ void GameState::UpdateAliens(float dt)
 		if ((*it)->IsOffScreen())
 		{
 			velChange = true;
-			_updateDelay *= Resources::DELAYFACTOR;
+			if (_updateDelay > 0.20f)
+			{
+				_updateDelay *= Resources::DELAYFACTOR;
+			}
 			break;
 		}		
 	}
@@ -196,7 +214,6 @@ void GameState::CheckBulletCollision()
 		{
 			if ((*aIt)->GetBox().contains((*bIt)->GetPos()))
 			{
-				std::cout << "Collision" << std::endl;
 				collided = true;
 				bIt = _bullets.erase(bIt);
 				break;
@@ -258,6 +275,47 @@ void GameOverScreen::Draw(sf::RenderWindow * wnd)
 }
 
 void GameOverScreen::Input(sf::Event event)
+{
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
+	{
+		_gsm->ChangeState(States::TITLE);
+	}
+}
+
+
+WinScreen::WinScreen(GSM* gsm)
+	:
+	State(gsm)
+{
+
+}
+
+WinScreen::~WinScreen()
+{
+}
+
+void WinScreen::Update(float dt)
+{
+}
+
+void WinScreen::Draw(sf::RenderWindow * wnd)
+{
+	float halfWidth = 0.0f;
+	float xPos = 0.0f;
+	sf::Text winner("You Win!", Resources::getFont("SpaceInvaders"), 80);
+	sf::Text instruct("Press Q", Resources::getFont("SpaceInvaders"), 20);
+	halfWidth = winner.getLocalBounds().width / 2;
+	xPos = (wnd->getSize().x / 2) - halfWidth;
+	winner.setPosition(sf::Vector2f(xPos, 100.0f));
+	xPos = (wnd->getSize().x / 2) - halfWidth;
+	halfWidth = instruct.getLocalBounds().width / 2;
+	xPos = (wnd->getSize().x / 2) - halfWidth;
+	instruct.setPosition(sf::Vector2f(xPos, 550.0f));
+	wnd->draw(winner);
+	wnd->draw(instruct);
+}
+
+void WinScreen::Input(sf::Event event)
 {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
 	{

@@ -41,5 +41,14 @@ void GSM::ChangeState(States nextState)
 			_states.pop();
 			_states.emplace(std::make_unique<GameOverScreen>(this));
 			break;
+		case WIN:
+			_states.pop();
+			_states.emplace(std::make_unique<WinScreen>(this));
+			break;
 	}
+}
+
+const size_t GSM::GetStackSize()
+{
+	return _states.size();
 }

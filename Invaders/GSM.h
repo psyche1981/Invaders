@@ -9,7 +9,8 @@ enum States
 {
 	TITLE,
 	GAME,
-	GAMEOVER
+	GAMEOVER,
+	WIN
 };
 
 class GSM
@@ -23,6 +24,7 @@ public:
 	void Input(sf::Event event);
 
 	void ChangeState(States nextState);
+	const size_t GetStackSize();
 
 private:
 	std::stack<std::unique_ptr<State>> _states;
