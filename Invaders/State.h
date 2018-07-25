@@ -52,6 +52,8 @@ private:
 
 	float _updateDelay;
 	bool _gameover = false;
+
+	void UpdateAliens(float dt);
 };
 
 class GameOverScreen : public State

@@ -90,36 +90,7 @@ void GameState::Update(float dt)
 
 	if (elapsed > _updateDelay)
 	{
-		bool velChange = false;
-		for (auto it = _aliens.begin(); it != _aliens.end(); ++it)
-		{			
-			if ((*it)->IsOffScreen())
-			{
-				velChange = true;
-				_updateDelay *= Resources::DELAYFACTOR;
-				break;
-			}
-		}
-		for (auto it = _aliens.begin(); it != _aliens.end(); ++it)
-		{
-			if (velChange)
-			{
-				float xVel = (*it)->GetXVel();
-				(*it)->SetVelocity(0.0f, Resources::ALIENYINCREMENT);
-				if ((*it)->ReachedBottom())
-				{
-					_gameover = true;
-					break;
-				}
-				(*it)->Update(dt);
-				(*it)->SetVelocity(-xVel, 0.0f);
-			}
-			else
-			{
-				(*it)->Update(dt);
-			}
-			
-		}
+		UpdateAliens(dt);
 		elapsed = 0.0f;
 	}
 	if (_gameover)
@@ -149,6 +120,39 @@ void GameState::Input(sf::Event event)
 	{
 		_gsm->ChangeState(States::TITLE);
 	}	
+}
+
+void GameState::UpdateAliens(float dt)
+{
+	bool velChange = false;
+	for (auto it = _aliens.begin(); it != _aliens.end(); ++it)
+	{
+		if ((*it)->IsOffScreen())
+		{
+			velChange = true;
+			_updateDelay *= Resources::DELAYFACTOR;
+			break;
+		}
+	}
+	for (auto it = _aliens.begin(); it != _aliens.end(); ++it)
+	{
+		if (velChange)
+		{
+			float xVel = (*it)->GetXVel();
+			(*it)->SetVelocity(0.0f, Resources::ALIENYINCREMENT);
+			if ((*it)->ReachedBottom())
+			{
+				_gameover = true;
+				break;
+			}
+			(*it)->Update(dt);
+			(*it)->SetVelocity(-xVel, 0.0f);
+		}
+		else
+		{
+			(*it)->Update(dt);
+		}
+	}
 }
 
 GameOverScreen::GameOverScreen(GSM* gsm)
