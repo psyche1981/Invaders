@@ -18,6 +18,8 @@ public:
 	virtual void Draw(sf::RenderWindow* wnd) = 0;
 	virtual void Input(sf::Event event) = 0;
 
+	const vec2f& GetPos();
+
 protected:
 	vec2f _pos;
 	rect _boundingBox;
@@ -49,12 +51,13 @@ public:
 	void Draw(sf::RenderWindow* wnd) override;
 	void Input(sf::Event event) override;
 
+	bool BulletFired();
+
 private:
 	void ConfineToScreen();
-	void BulletFired();
-	std::vector<std::unique_ptr<Bullet>> _bullets;
 
 	bool _fireBullet = true;
+	bool _bulletFired = false;
 
 };
 

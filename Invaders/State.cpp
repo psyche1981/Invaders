@@ -85,6 +85,8 @@ void GameState::Update(float dt)
 {
 	_player->Update(dt);
 
+	
+
 	static float elapsed = 0.0f;
 	elapsed += dt;	
 
@@ -93,6 +95,11 @@ void GameState::Update(float dt)
 		UpdateAliens(dt);
 		elapsed = 0.0f;
 	}
+	for (auto& b : _bullets)
+	{
+		b->Update(dt);
+	}
+
 	if (_gameover)
 	{
 		std::cout << "Game Over!" << std::endl;
@@ -111,11 +118,21 @@ void GameState::Draw(sf::RenderWindow* wnd)
 	{
 		a->Draw(wnd);
 	}
+	for (auto& b : _bullets)
+	{
+		b->Draw(wnd);
+	}
 }
 
 void GameState::Input(sf::Event event)
 {
 	_player->Input(event);
+	if (_player->BulletFired())
+	{
+		vec2f playerPos = _player->GetPos();
+		vec2f pos(playerPos.x + Resources::PLAYERWIDTH / 2, playerPos.y);
+		_bullets.emplace_back(std::make_unique<Bullet>(pos));
+	}
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
 	{

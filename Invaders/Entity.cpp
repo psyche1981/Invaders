@@ -15,6 +15,11 @@ Entity::~Entity()
 
 }
 
+const vec2f& Entity::GetPos()
+{
+	return _pos;
+}
+
 Player::Player(vec2f pos, vec2f size)
 	:
 	Entity(pos,size)
@@ -31,20 +36,11 @@ void Player::Update(float dt)
 {
 	_pos += _vel * dt;
 	_rec.setPosition(_pos);
-	ConfineToScreen();
-
-	for (auto& b : _bullets)
-	{
-		b->Update(dt);
-	}
+	ConfineToScreen();	
 }
 
 void Player::Draw(sf::RenderWindow * wnd)
-{
-	for (auto& b : _bullets)
-	{
-		b->Draw(wnd);
-	}
+{	
 	wnd->draw(_rec);
 }
 
@@ -62,7 +58,7 @@ void Player::Input(sf::Event event)
 	{
 		_vel.x = 0.0f;
 	}
-
+	_bulletFired = false;
 	if (event.type == sf::Event::KeyPressed)
 	{
 		if (event.key.code == sf::Keyboard::Space)
@@ -70,7 +66,7 @@ void Player::Input(sf::Event event)
 			if (_fireBullet)
 			{
 				_fireBullet = false;
-				BulletFired();
+				_bulletFired = true;
 			}			
 		}
 	}
@@ -85,10 +81,9 @@ void Player::Input(sf::Event event)
 	
 }
 
-void Player::BulletFired()
+bool Player::BulletFired()
 {
-	vec2f pos(_pos.x + Resources::PLAYERWIDTH / 2, _pos.y);
-	_bullets.emplace_back(std::make_unique<Bullet>(pos));
+	return _bulletFired;
 }
 
 void Player::ConfineToScreen()
@@ -160,6 +155,7 @@ Bullet::Bullet(vec2f pos)
 
 Bullet::~Bullet()
 {
+	std::cout << "Bullet Died" << std::endl;
 }
 
 void Bullet::Update(float dt)
@@ -175,4 +171,5 @@ void Bullet::Draw(sf::RenderWindow * wnd)
 
 void Bullet::Input(sf::Event event)
 {
+	//no input for bullets
 }
