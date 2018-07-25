@@ -67,7 +67,19 @@ void Player::Input(sf::Event event)
 	{
 		if (event.key.code == sf::Keyboard::Space)
 		{
-			BulletFired();
+			if (_fireBullet)
+			{
+				_fireBullet = false;
+				BulletFired();
+			}			
+		}
+	}
+
+	if (event.type == sf::Event::KeyReleased)
+	{
+		if (event.key.code == sf::Keyboard::Space)
+		{
+			_fireBullet = true;
 		}
 	}
 	

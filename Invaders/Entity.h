@@ -54,6 +54,8 @@ private:
 	void BulletFired();
 	std::vector<std::unique_ptr<Bullet>> _bullets;
 
+	bool _fireBullet = true;
+
 };
 
 class Alien : public Entity
