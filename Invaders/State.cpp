@@ -39,7 +39,7 @@ void TitleScreen::Draw(sf::RenderWindow * wnd)
 	scaife.setPosition(sf::Vector2f(xPos, 100.0f));
 	halfWidth = invaders.getLocalBounds().width / 2;
 	xPos = (wnd->getSize().x / 2) - halfWidth;
-	invaders.setPosition(sf::Vector2f(xPos, 160.0f));
+	invaders.setPosition(sf::Vector2f(xPos, 165.0f));
 	halfWidth = instruct.getLocalBounds().width / 2;
 	xPos = (wnd->getSize().x / 2) - halfWidth;
 	instruct.setPosition(sf::Vector2f(xPos, 400.0f));
