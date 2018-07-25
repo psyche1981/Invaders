@@ -32,9 +32,9 @@ public:
 	virtual ~Player();
 
 
-	void Update(float dt);
-	void Draw(sf::RenderWindow* wnd);
-	void Input(sf::Event event);
+	void Update(float dt) override;
+	void Draw(sf::RenderWindow* wnd) override;
+	void Input(sf::Event event) override;
 
 private:
 	void ConfineToScreen();
@@ -50,6 +50,11 @@ public:
 	void Update(float dt);
 	void Draw(sf::RenderWindow* wnd);
 	void Input(sf::Event event);
+
+	bool IsOffScreen();
+	void SetVelocity(float xVel, float yPos);
+	bool ReachedBottom();
+	const float GetXVel();
 
 private:
 };

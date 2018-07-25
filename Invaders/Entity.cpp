@@ -67,6 +67,8 @@ Alien::Alien(vec2f pos, vec2f size)
 	:
 	Entity(pos, size)
 {
+	_vel.x = Resources::ALIENSPEED;
+	_rec.setPosition(_pos);
 	_rec.setFillColor(sf::Color::White);
 }
 
@@ -76,7 +78,8 @@ Alien::~Alien()
 }
 
 void Alien::Update(float dt)
-{
+{	
+	_pos += _vel;	
 	_rec.setPosition(_pos);
 }
 
@@ -88,4 +91,25 @@ void Alien::Draw(sf::RenderWindow * wnd)
 void Alien::Input(sf::Event event)
 {
 	//no input for aliens
+}
+
+bool Alien::IsOffScreen()
+{
+	return (_pos.x + _vel.x < 0 || _pos.x + _vel.x > (Resources::SCREENWIDTH - Resources::ALIENSIZE));
+}
+
+void Alien::SetVelocity(float xVel, float yPos)
+{
+	_vel.x = xVel;
+	_pos.y += yPos;
+}
+
+bool Alien::ReachedBottom()
+{
+	return _pos.y + Resources::ALIENSIZE > Resources::SCREENHEIGHT;
+}
+
+const float Alien::GetXVel()
+{
+	return _vel.x;
 }

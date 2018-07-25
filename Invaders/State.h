@@ -47,6 +47,22 @@ public:
 
 
 private:
-	std::vector<std::unique_ptr<Entity>> _entities;
+	std::unique_ptr<Player> _player;
+	std::vector<std::unique_ptr<Alien>> _aliens;
+
+	float _updateDelay;
+	bool _gameover = false;
+};
+
+class GameOverScreen : public State
+{
+public:
+	GameOverScreen(GSM* gsm);
+	virtual ~GameOverScreen();
+
+	void Update(float dt) override;
+	void Draw(sf::RenderWindow* wnd) override;
+	void Input(sf::Event event) override;
+
 };
 

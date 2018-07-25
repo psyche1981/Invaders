@@ -31,11 +31,11 @@ void TitleScreen::Draw(sf::RenderWindow * wnd)
 {
 	float halfWidth = 0.0f;
 	float xPos = 0.0f;
-	sf::Text scaife("SCAIFE", Resources::getFont("SpaceInvaders"), 60);	
+	sf::Text scaife("SCAIFE", Resources::getFont("SpaceInvaders"), 60);
 	sf::Text invaders("INVADERS", Resources::getFont("SpaceInvaders"), 60);
 	sf::Text instruct("Press Space Bar", Resources::getFont("SpaceInvaders"), 20);
 	halfWidth = scaife.getLocalBounds().width / 2;
-	xPos = (wnd->getSize().x / 2 )- halfWidth;
+	xPos = (wnd->getSize().x / 2) - halfWidth;
 	scaife.setPosition(sf::Vector2f(xPos, 100.0f));
 	halfWidth = invaders.getLocalBounds().width / 2;
 	xPos = (wnd->getSize().x / 2) - halfWidth;
@@ -61,22 +61,71 @@ GameState::GameState(GSM* gsm)
 	:
 	State(gsm)
 {
+	_updateDelay = 0.8f;
 	float xPos = (Resources::SCREENWIDTH / 2) - (Resources::PLAYERWIDTH / 2);
-	_entities.emplace_back(std::make_unique<Player>(vec2f(xPos, 550.0f), vec2f(Resources::PLAYERWIDTH, Resources::PLAYERHEIGHT)));
-	_entities.emplace_back(std::make_unique<Alien>(vec2f(100.0f, 100.0f), vec2f(Resources::ALIENSIZE, Resources::ALIENSIZE)));
+	_player = std::make_unique<Player>(vec2f(xPos, 550.0f), vec2f(Resources::PLAYERWIDTH, Resources::PLAYERHEIGHT));
+	//_entities.emplace_back(std::make_unique<Alien>(vec2f(500.0f, 100.0f), vec2f(Resources::ALIENSIZE, Resources::ALIENSIZE)));
+	for (int i = 0; i < 10; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			_aliens.emplace_back(std::make_unique<Alien>(vec2f(100.0f + i * 60.0f, 100.0f + j * 60.0f), vec2f(Resources::ALIENSIZE, Resources::ALIENSIZE)));
+		}
+	}
+
 }
 
 GameState::~GameState()
 {
-	_entities.clear();
+	_aliens.clear();
 	std::cout << "Game State Died" << std::endl;
 }
 
 void GameState::Update(float dt)
 {
-	for (auto it = _entities.begin(); it != _entities.end(); ++it)
+	_player->Update(dt);
+
+	static float elapsed = 0.0f;
+	elapsed += dt;	
+
+	if (elapsed > _updateDelay)
 	{
-		(*it)->Update(dt);
+		bool velChange = false;
+		for (auto it = _aliens.begin(); it != _aliens.end(); ++it)
+		{			
+			if ((*it)->IsOffScreen())
+			{
+				velChange = true;
+				_updateDelay *= Resources::DELAYFACTOR;
+				break;
+			}
+		}
+		for (auto it = _aliens.begin(); it != _aliens.end(); ++it)
+		{
+			if (velChange)
+			{
+				float xVel = (*it)->GetXVel();
+				(*it)->SetVelocity(0.0f, Resources::ALIENYINCREMENT);
+				if ((*it)->ReachedBottom())
+				{
+					_gameover = true;
+					break;
+				}
+				(*it)->Update(dt);
+				(*it)->SetVelocity(-xVel, 0.0f);
+			}
+			else
+			{
+				(*it)->Update(dt);
+			}
+			
+		}
+		elapsed = 0.0f;
+	}
+	if (_gameover)
+	{
+		std::cout << "Game Over!" << std::endl;
+		_gsm->ChangeState(States::GAMEOVER);
 	}
 }
 
@@ -85,21 +134,45 @@ void GameState::Draw(sf::RenderWindow* wnd)
 	sf::Text scoreText("Score: ", Resources::getFont("SpaceInvaders"), 20);
 	wnd->draw(scoreText);
 
-
-	for (auto it = _entities.begin(); it != _entities.end(); ++it)
+	_player->Draw(wnd);
+	for (auto& a : _aliens)
 	{
-		(*it)->Draw(wnd);
+		a->Draw(wnd);
 	}
 }
 
 void GameState::Input(sf::Event event)
 {
+	_player->Input(event);
+
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
 	{
 		_gsm->ChangeState(States::TITLE);
-	}
-	if (!_entities.empty())
-	{
-		_entities[0]->Input(event);
 	}	
+}
+
+GameOverScreen::GameOverScreen(GSM* gsm)
+	:
+	State(gsm)
+{
+}
+
+GameOverScreen::~GameOverScreen()
+{
+}
+
+void GameOverScreen::Update(float dt)
+{
+}
+
+void GameOverScreen::Draw(sf::RenderWindow * wnd)
+{
+}
+
+void GameOverScreen::Input(sf::Event event)
+{
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
+	{
+		_gsm->ChangeState(States::TITLE);
+	}
 }

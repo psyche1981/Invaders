@@ -38,6 +38,8 @@ void GSM::ChangeState(States nextState)
 			_states.emplace(std::make_unique<GameState>(this));
 			break;
 		case GAMEOVER:
+			_states.pop();
+			_states.emplace(std::make_unique<GameOverScreen>(this));
 			break;
 	}
 }

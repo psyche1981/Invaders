@@ -26,8 +26,11 @@ public:
 	static constexpr int SCREENHEIGHT = 600;
 	static constexpr float PLAYERWIDTH = 75.0f;
 	static constexpr float PLAYERHEIGHT = 20.0f;
-	static constexpr float PLAYERSPEED = 150.0f;
-	static constexpr float ALIENSIZE = 20.0f;
+	static constexpr float PLAYERSPEED = 200.0f;
+	static constexpr float ALIENSIZE = 40.0f;
+	static constexpr float ALIENSPEED = 25.0f;
+	static constexpr float DELAYFACTOR = 0.75f;
+	static constexpr float ALIENYINCREMENT = 30.0f;
 private:	
 	Resources() {}
 	~Resources() {}
