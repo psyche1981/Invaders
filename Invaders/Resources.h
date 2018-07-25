@@ -29,8 +29,8 @@ public:
 	static constexpr float PLAYERSPEED = 200.0f;
 	static constexpr float ALIENSIZE = 40.0f;
 	static constexpr float ALIENSPEED = 25.0f;
-	static constexpr float DELAYFACTOR = 0.75f;
-	static constexpr float ALIENYINCREMENT = 30.0f;
+	static constexpr float DELAYFACTOR = 0.80f;
+	static constexpr float ALIENYINCREMENT = 20.0f;
 
 	enum AlienType
 	{

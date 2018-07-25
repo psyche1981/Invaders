@@ -64,19 +64,19 @@ GameState::GameState(GSM* gsm)
 	float xPos = (Resources::SCREENWIDTH / 2) - (Resources::PLAYERWIDTH / 2);
 	_player = std::make_unique<Player>(vec2f(xPos, 550.0f), vec2f(Resources::PLAYERWIDTH, Resources::PLAYERHEIGHT));
 	//_entities.emplace_back(std::make_unique<Alien>(vec2f(500.0f, 100.0f), vec2f(Resources::ALIENSIZE, Resources::ALIENSIZE)));
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 9; i++)
 	{
 		_aliens.emplace_back(std::make_unique<Alien>(vec2f(100.0f + i * 70.0f, 60.0f), vec2f(Resources::ALIENSIZE, Resources::ALIENSIZE), Resources::AlienType::THIRD));
 
 	}
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 9; i++)
 	{
 		for (int j = 0; j < 2; j++)
 		{
 			_aliens.emplace_back(std::make_unique<Alien>(vec2f(100.0f + i * 70.0f, 130.0f + j * 70.0f), vec2f(Resources::ALIENSIZE, Resources::ALIENSIZE), Resources::AlienType::SECOND));
 		}		
 	}
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 9; i++)
 	{
 		_aliens.emplace_back(std::make_unique<Alien>(vec2f(100.0f + i * 70.0f, 270.0f), vec2f(Resources::ALIENSIZE, Resources::ALIENSIZE), Resources::AlienType::FIRST));
 	}
@@ -238,6 +238,23 @@ void GameOverScreen::Update(float dt)
 
 void GameOverScreen::Draw(sf::RenderWindow * wnd)
 {
+	float halfWidth = 0.0f;
+	float xPos = 0.0f;
+	sf::Text gameOver("Game Over!", Resources::getFont("SpaceInvaders"), 80);
+	sf::Text scaifegoat("You are the\nSCAIFEGOAT", Resources::getFont("SpaceInvaders"), 60);
+	sf::Text instruct("Press Q", Resources::getFont("SpaceInvaders"), 20);
+	halfWidth = gameOver.getLocalBounds().width / 2;
+	xPos = (wnd->getSize().x / 2) - halfWidth;
+	gameOver.setPosition(sf::Vector2f(xPos, 100.0f));
+	halfWidth = scaifegoat.getLocalBounds().width / 2;
+	xPos = (wnd->getSize().x / 2) - halfWidth;
+	scaifegoat.setPosition(sf::Vector2f(xPos, 200.0f));
+	halfWidth = instruct.getLocalBounds().width / 2;
+	xPos = (wnd->getSize().x / 2) - halfWidth;
+	instruct.setPosition(sf::Vector2f(xPos, 550.0f));
+	wnd->draw(gameOver);
+	wnd->draw(scaifegoat);
+	wnd->draw(instruct);
 }
 
 void GameOverScreen::Input(sf::Event event)
