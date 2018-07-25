@@ -111,21 +111,21 @@ Alien::Alien(vec2f pos, vec2f size,Resources::AlienType type)
 	case Resources::AlienType::FIRST:
 		_hitPoints = 1;
 		_scoreValue = 20;
-		_rec.setFillColor(sf::Color::White);
+		_sprite = sf::Sprite(Resources::getTexture("Nigs1"));
 		break;
 	case Resources::AlienType::SECOND:
 		_hitPoints = 2;
 		_scoreValue = 40;
-		_rec.setFillColor(sf::Color::Blue);
+		_sprite = sf::Sprite(Resources::getTexture("Nigs2"));
 		break;
 	case Resources::AlienType::THIRD:
 		_hitPoints = 3;
 		_scoreValue = 60;
-		_rec.setFillColor(sf::Color::Green);
+		_sprite = sf::Sprite(Resources::getTexture("Nigs3"));
 		break;
 	}
 	_vel.x = Resources::ALIENSPEED;
-	_rec.setPosition(_pos);
+	_sprite.setPosition(_boundingBox.left, _boundingBox.top);
 	
 }
 
@@ -137,14 +137,14 @@ Alien::~Alien()
 void Alien::Update(float dt)
 {	
 	_pos += _vel;	
-	_rec.setPosition(_pos);
+	_sprite.setPosition(_pos);
 	_boundingBox.left = _pos.x;
 	_boundingBox.top = _pos.y;
 }
 
 void Alien::Draw(sf::RenderWindow * wnd)
 {
-	wnd->draw(_rec);
+	wnd->draw(_sprite);
 }
 
 void Alien::Input(sf::Event event)

@@ -26,6 +26,7 @@ protected:
 	rect _boundingBox;
 	vec2f _vel;
 
+	sf::Sprite _sprite;
 
 	//temp drawing stuff
 	sf::RectangleShape _rec;

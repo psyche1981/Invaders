@@ -54,7 +54,6 @@ void TitleScreen::Input(sf::Event event)
 	{
 		_gsm->ChangeState(States::GAME);
 	}
-
 }
 
 GameState::GameState(GSM* gsm)
@@ -67,20 +66,19 @@ GameState::GameState(GSM* gsm)
 	//_entities.emplace_back(std::make_unique<Alien>(vec2f(500.0f, 100.0f), vec2f(Resources::ALIENSIZE, Resources::ALIENSIZE)));
 	for (int i = 0; i < 10; i++)
 	{
-		_aliens.emplace_back(std::make_unique<Alien>(vec2f(100.0f + i * 60.0f, 100.0f), vec2f(Resources::ALIENSIZE, Resources::ALIENSIZE), Resources::AlienType::THIRD));
+		_aliens.emplace_back(std::make_unique<Alien>(vec2f(100.0f + i * 70.0f, 60.0f), vec2f(Resources::ALIENSIZE, Resources::ALIENSIZE), Resources::AlienType::THIRD));
 
 	}
 	for (int i = 0; i < 10; i++)
 	{
 		for (int j = 0; j < 2; j++)
 		{
-			_aliens.emplace_back(std::make_unique<Alien>(vec2f(100.0f + i * 60.0f, 160.0f + j * 60.0f), vec2f(Resources::ALIENSIZE, Resources::ALIENSIZE), Resources::AlienType::SECOND));
+			_aliens.emplace_back(std::make_unique<Alien>(vec2f(100.0f + i * 70.0f, 130.0f + j * 70.0f), vec2f(Resources::ALIENSIZE, Resources::ALIENSIZE), Resources::AlienType::SECOND));
 		}		
 	}
 	for (int i = 0; i < 10; i++)
 	{
-		_aliens.emplace_back(std::make_unique<Alien>(vec2f(100.0f + i * 60.0f, 280.0f), vec2f(Resources::ALIENSIZE, Resources::ALIENSIZE), Resources::AlienType::FIRST));
-
+		_aliens.emplace_back(std::make_unique<Alien>(vec2f(100.0f + i * 70.0f, 270.0f), vec2f(Resources::ALIENSIZE, Resources::ALIENSIZE), Resources::AlienType::FIRST));
 	}
 
 }
@@ -94,8 +92,6 @@ GameState::~GameState()
 void GameState::Update(float dt)
 {
 	_player->Update(dt);
-
-	
 
 	static float elapsed = 0.0f;
 	elapsed += dt;	
@@ -117,7 +113,6 @@ void GameState::Update(float dt)
 
 	if (_gameover)
 	{
-		std::cout << "Game Over!" << std::endl;
 		_gsm->ChangeState(States::GAMEOVER);
 	}
 }
@@ -156,8 +151,7 @@ void GameState::Input(sf::Event event)
 }
 
 void GameState::UpdateAliens(float dt)
-{
-	
+{	
 	bool velChange = false;
 	for (auto it = _aliens.begin(); it != _aliens.end(); ++it)
 	{

@@ -15,12 +15,14 @@ sf::Texture Resources::loadTexture(const std::string& filename)
 
 void Resources::LoadImages()
 {
-	_textures.insert(std::pair<std::string, sf::Texture>("Nigs1", loadTexture("NS.png")));
+	_textures.insert(std::pair<std::string, sf::Texture>("Nigs1", loadTexture("Resources/Images/NS1.png")));
+	_textures.insert(std::pair<std::string, sf::Texture>("Nigs2", loadTexture("Resources/Images/NS2.png")));
+	_textures.insert(std::pair<std::string, sf::Texture>("Nigs3", loadTexture("Resources/Images/NS3.png")));
 }
 
 void Resources::LoadFonts()
 {
-	_fonts.insert(std::pair<std::string, sf::Font>("SpaceInvaders", loadFont("space_invaders.ttf")));
+	_fonts.insert(std::pair<std::string, sf::Font>("SpaceInvaders", loadFont("Resources/Fonts/space_invaders.ttf")));
 }
 
 const sf::Font & Resources::getFont(const std::string & name)
