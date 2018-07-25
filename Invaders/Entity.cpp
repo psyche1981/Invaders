@@ -32,10 +32,19 @@ void Player::Update(float dt)
 	_pos += _vel * dt;
 	_rec.setPosition(_pos);
 	ConfineToScreen();
+
+	for (auto& b : _bullets)
+	{
+		b->Update(dt);
+	}
 }
 
 void Player::Draw(sf::RenderWindow * wnd)
 {
+	for (auto& b : _bullets)
+	{
+		b->Draw(wnd);
+	}
 	wnd->draw(_rec);
 }
 
@@ -53,6 +62,21 @@ void Player::Input(sf::Event event)
 	{
 		_vel.x = 0.0f;
 	}
+
+	if (event.type == sf::Event::KeyPressed)
+	{
+		if (event.key.code == sf::Keyboard::Space)
+		{
+			BulletFired();
+		}
+	}
+	
+}
+
+void Player::BulletFired()
+{
+	vec2f pos(_pos.x + Resources::PLAYERWIDTH / 2, _pos.y);
+	_bullets.emplace_back(std::make_unique<Bullet>(pos));
 }
 
 void Player::ConfineToScreen()
@@ -112,4 +136,31 @@ bool Alien::ReachedBottom()
 const float Alien::GetXVel()
 {
 	return _vel.x;
+}
+
+Bullet::Bullet(vec2f pos)
+	:
+	Entity(pos, vec2f(4.0f, 12.0f))
+{
+	_vel.y = -250.0f;
+	_rec.setPosition(_pos);
+}
+
+Bullet::~Bullet()
+{
+}
+
+void Bullet::Update(float dt)
+{
+	_pos += _vel * dt;
+	_rec.setPosition(_pos);
+}
+
+void Bullet::Draw(sf::RenderWindow * wnd)
+{
+	wnd->draw(_rec);
+}
+
+void Bullet::Input(sf::Event event)
+{
 }

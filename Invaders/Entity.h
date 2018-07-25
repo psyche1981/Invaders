@@ -1,5 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <vector>
+#include <memory>
 
 #include "Resources.h"
 
@@ -25,6 +27,17 @@ protected:
 	sf::RectangleShape _rec;
 };
 
+
+class Bullet : public Entity
+{
+public:
+	Bullet(vec2f pos);
+	virtual ~Bullet();
+	void Update(float dt) override;
+	void Draw(sf::RenderWindow* wnd) override;
+	void Input(sf::Event event) override;
+};
+
 class Player : public Entity
 {
 public:
@@ -38,6 +51,8 @@ public:
 
 private:
 	void ConfineToScreen();
+	void BulletFired();
+	std::vector<std::unique_ptr<Bullet>> _bullets;
 
 };
 

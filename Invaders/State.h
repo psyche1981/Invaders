@@ -49,6 +49,7 @@ public:
 private:
 	std::unique_ptr<Player> _player;
 	std::vector<std::unique_ptr<Alien>> _aliens;
+	std::vector<std::unique_ptr<Bullet>> _bullets;
 
 	float _updateDelay;
 	bool _gameover = false;
