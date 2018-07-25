@@ -20,6 +20,11 @@ const vec2f& Entity::GetPos()
 	return _pos;
 }
 
+const rect & Entity::GetBox()
+{
+	return _boundingBox;
+}
+
 Player::Player(vec2f pos, vec2f size)
 	:
 	Entity(pos,size)
@@ -36,6 +41,8 @@ void Player::Update(float dt)
 {
 	_pos += _vel * dt;
 	_rec.setPosition(_pos);
+	_boundingBox.left = _pos.x;
+	_boundingBox.top = _pos.y;
 	ConfineToScreen();	
 }
 
@@ -112,6 +119,8 @@ void Alien::Update(float dt)
 {	
 	_pos += _vel;	
 	_rec.setPosition(_pos);
+	_boundingBox.left = _pos.x;
+	_boundingBox.top = _pos.y;
 }
 
 void Alien::Draw(sf::RenderWindow * wnd)
@@ -162,6 +171,8 @@ void Bullet::Update(float dt)
 {
 	_pos += _vel * dt;
 	_rec.setPosition(_pos);
+	_boundingBox.left = _pos.x;
+	_boundingBox.top = _pos.y;
 }
 
 void Bullet::Draw(sf::RenderWindow * wnd)
@@ -172,4 +183,9 @@ void Bullet::Draw(sf::RenderWindow * wnd)
 void Bullet::Input(sf::Event event)
 {
 	//no input for bullets
+}
+
+bool Bullet::IsOffScreen()
+{
+	return _pos.y < 0;
 }

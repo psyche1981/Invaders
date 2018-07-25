@@ -56,6 +56,7 @@ private:
 	int _score = 0;
 
 	void UpdateAliens(float dt);
+	void CheckBulletCollision();
 };
 
 class GameOverScreen : public State

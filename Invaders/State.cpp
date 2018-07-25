@@ -100,6 +100,11 @@ void GameState::Update(float dt)
 		b->Update(dt);
 	}
 
+	if (!_bullets.empty() && !_aliens.empty())
+	{
+		CheckBulletCollision();
+	}	
+
 	if (_gameover)
 	{
 		std::cout << "Game Over!" << std::endl;
@@ -142,16 +147,20 @@ void GameState::Input(sf::Event event)
 
 void GameState::UpdateAliens(float dt)
 {
+	
 	bool velChange = false;
 	for (auto it = _aliens.begin(); it != _aliens.end(); ++it)
 	{
+		//has alien reached the sides of screen?
 		if ((*it)->IsOffScreen())
 		{
 			velChange = true;
 			_updateDelay *= Resources::DELAYFACTOR;
 			break;
-		}
+		}		
 	}
+
+
 	for (auto it = _aliens.begin(); it != _aliens.end(); ++it)
 	{
 		if (velChange)
@@ -169,6 +178,38 @@ void GameState::UpdateAliens(float dt)
 		else
 		{
 			(*it)->Update(dt);
+		}
+	}
+}
+
+void GameState::CheckBulletCollision()
+{	
+	bool collided = false;
+	for (auto aIt = _aliens.begin(); aIt != _aliens.end();)
+	{
+		collided = false;
+		for (auto bIt = _bullets.begin(); bIt != _bullets.end();)
+		{
+			if ((*aIt)->GetBox().contains((*bIt)->GetPos()))
+			{
+				std::cout << "Collision" << std::endl;
+				collided = true;
+				bIt = _bullets.erase(bIt);
+				break;
+			}
+			else
+			{
+				++bIt;
+			}
+		}
+		if (collided)
+		{
+			aIt = _aliens.erase(aIt);
+			break;
+		}
+		else
+		{
+			++aIt;
 		}
 	}
 }

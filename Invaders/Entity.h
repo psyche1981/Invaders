@@ -19,6 +19,7 @@ public:
 	virtual void Input(sf::Event event) = 0;
 
 	const vec2f& GetPos();
+	const rect& GetBox();
 
 protected:
 	vec2f _pos;
@@ -38,6 +39,9 @@ public:
 	void Update(float dt) override;
 	void Draw(sf::RenderWindow* wnd) override;
 	void Input(sf::Event event) override;
+
+	bool IsOffScreen();
+
 };
 
 class Player : public Entity
