@@ -4,7 +4,6 @@
 #include <iostream>
 #include <string>
 
-
 class Resources
 {
 public:	
@@ -21,6 +20,14 @@ public:
 
 	static sf::Texture loadTexture(const std::string& filename);
 	static sf::Font loadFont(const std::string& filename);
+
+
+	static constexpr int SCREENWIDTH = 800;
+	static constexpr int SCREENHEIGHT = 600;
+	static constexpr float PLAYERWIDTH = 75.0f;
+	static constexpr float PLAYERHEIGHT = 20.0f;
+	static constexpr float PLAYERSPEED = 150.0f;
+	static constexpr float ALIENSIZE = 20.0f;
 private:	
 	Resources() {}
 	~Resources() {}

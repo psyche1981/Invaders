@@ -1,10 +1,13 @@
 #include "Entity.h"
 
-Entity::Entity(vec2f pos)
+Entity::Entity(vec2f pos, vec2f size)
 	:
-	_pos(pos)
+	_pos(pos),
+	_boundingBox(rect(pos, size)),
+	_vel(0.0f, 0.0f),
+	_rec(size)
 {
-	_boundingBox = rect(_pos, vec2f(50.0f, 50.0f));
+	
 }
 
 Entity::~Entity()
@@ -12,29 +15,77 @@ Entity::~Entity()
 
 }
 
-Player::Player()
+Player::Player(vec2f pos, vec2f size)
 	:
-	Entity(vec2f(100.0f, 100.0f))
+	Entity(pos,size)
 {
+	_rec.setFillColor(sf::Color::Red);
 }
 
 Player::~Player()
 {
+	
 }
 
 void Player::Update(float dt)
 {
+	_pos += _vel * dt;
+	_rec.setPosition(_pos);
+	ConfineToScreen();
 }
 
 void Player::Draw(sf::RenderWindow * wnd)
 {
-	vec2f size(_boundingBox.width, _boundingBox.height);
-	sf::RectangleShape rec(size);
-	rec.setPosition(_pos);
-	rec.setFillColor(sf::Color(255, 200, 100));
-	wnd->draw(rec);
+	wnd->draw(_rec);
 }
 
 void Player::Input(sf::Event event)
+{	
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+	{
+		_vel.x = -Resources::PLAYERSPEED;
+	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+	{
+		_vel.x = Resources::PLAYERSPEED;
+	}
+	else
+	{
+		_vel.x = 0.0f;
+	}
+}
+
+void Player::ConfineToScreen()
 {
+	if (_pos.x < 0.0f)
+		_pos.x = 0.0f;
+	if (_pos.x > Resources::SCREENWIDTH - _boundingBox.width)
+		_pos.x = Resources::SCREENWIDTH - _boundingBox.width;
+}
+
+Alien::Alien(vec2f pos, vec2f size)
+	:
+	Entity(pos, size)
+{
+	_rec.setFillColor(sf::Color::White);
+}
+
+Alien::~Alien()
+{
+	std::cout << "Alien Died" << std::endl;
+}
+
+void Alien::Update(float dt)
+{
+	_rec.setPosition(_pos);
+}
+
+void Alien::Draw(sf::RenderWindow * wnd)
+{
+	wnd->draw(_rec);
+}
+
+void Alien::Input(sf::Event event)
+{
+	//no input for aliens
 }

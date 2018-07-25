@@ -1,5 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <vector>
+#include <memory>
 
 #include "Resources.h"
 #include "Entity.h"
@@ -43,6 +45,8 @@ public:
 	void Draw(sf::RenderWindow* wnd) override;
 	void Input(sf::Event event) override;
 
-	Player _player;
+
+private:
+	std::vector<std::unique_ptr<Entity>> _entities;
 };
 

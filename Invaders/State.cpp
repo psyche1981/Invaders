@@ -20,7 +20,7 @@ TitleScreen::TitleScreen(GSM* gsm)
 
 TitleScreen::~TitleScreen()
 {
-	//std::cout << "Title screen died" << std::endl;
+	
 }
 
 void TitleScreen::Update(float dt)
@@ -59,19 +59,25 @@ void TitleScreen::Input(sf::Event event)
 
 GameState::GameState(GSM* gsm)
 	:
-	State(gsm),
-	_player()
+	State(gsm)
 {
-	
+	float xPos = (Resources::SCREENWIDTH / 2) - (Resources::PLAYERWIDTH / 2);
+	_entities.emplace_back(std::make_unique<Player>(vec2f(xPos, 550.0f), vec2f(Resources::PLAYERWIDTH, Resources::PLAYERHEIGHT)));
+	_entities.emplace_back(std::make_unique<Alien>(vec2f(100.0f, 100.0f), vec2f(Resources::ALIENSIZE, Resources::ALIENSIZE)));
 }
 
 GameState::~GameState()
 {
-	//std::cout << "Game state died" << std::endl;
+	_entities.clear();
+	std::cout << "Game State Died" << std::endl;
 }
 
 void GameState::Update(float dt)
 {
+	for (auto it = _entities.begin(); it != _entities.end(); ++it)
+	{
+		(*it)->Update(dt);
+	}
 }
 
 void GameState::Draw(sf::RenderWindow* wnd)
@@ -80,9 +86,10 @@ void GameState::Draw(sf::RenderWindow* wnd)
 	wnd->draw(scoreText);
 
 
-	//temp
-	_player.Draw(wnd);
-
+	for (auto it = _entities.begin(); it != _entities.end(); ++it)
+	{
+		(*it)->Draw(wnd);
+	}
 }
 
 void GameState::Input(sf::Event event)
@@ -91,4 +98,8 @@ void GameState::Input(sf::Event event)
 	{
 		_gsm->ChangeState(States::TITLE);
 	}
+	if (!_entities.empty())
+	{
+		_entities[0]->Input(event);
+	}	
 }

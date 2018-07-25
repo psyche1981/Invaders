@@ -1,13 +1,15 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
+#include "Resources.h"
+
 typedef sf::Vector2f vec2f;
 typedef sf::Rect<float> rect;
 
 class Entity
 {
 public:
-	Entity(vec2f pos);
+	Entity(vec2f pos, vec2f size);
 	virtual ~Entity();
 
 	virtual void Update(float dt) = 0;
@@ -17,12 +19,16 @@ public:
 protected:
 	vec2f _pos;
 	rect _boundingBox;
+	vec2f _vel;
+
+	//temp drawing stuff
+	sf::RectangleShape _rec;
 };
 
 class Player : public Entity
 {
 public:
-	Player();
+	Player(vec2f pos, vec2f size);
 	virtual ~Player();
 
 
@@ -30,4 +36,20 @@ public:
 	void Draw(sf::RenderWindow* wnd);
 	void Input(sf::Event event);
 
+private:
+	void ConfineToScreen();
+
+};
+
+class Alien : public Entity
+{
+public:
+	Alien(vec2f pos, vec2f size);
+	virtual ~Alien();
+
+	void Update(float dt);
+	void Draw(sf::RenderWindow* wnd);
+	void Input(sf::Event event);
+
+private:
 };

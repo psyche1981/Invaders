@@ -61,7 +61,7 @@ private:
 
 int main()
 {
-	Window wnd(800, 600, "Space Invaders");
+	Window wnd(Resources::SCREENWIDTH, Resources::SCREENHEIGHT, "Space Invaders");
 	wnd.Loop();
 	return 0;
 }
