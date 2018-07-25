@@ -2,6 +2,8 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include <memory>
+#include <ctime>
+#include <random>
 
 #include "Resources.h"
 #include "Entity.h"
@@ -50,6 +52,9 @@ private:
 	std::unique_ptr<Player> _player;
 	std::vector<std::unique_ptr<Alien>> _aliens;
 	std::vector<std::unique_ptr<Bullet>> _bullets;
+	std::vector<sf::CircleShape> _stars;
+
+	void CreateStarfield();
 
 	float _updateDelay;
 	bool _gameover = false;

@@ -79,13 +79,47 @@ GameState::GameState(GSM* gsm)
 	{
 		_aliens.emplace_back(std::make_unique<Alien>(vec2f(100.0f + i * 70.0f, 270.0f), vec2f(34.0f, 41.0f), AlienType::FIRST));
 	}
-
+	CreateStarfield();
 }
 
 GameState::~GameState()
 {
 	_aliens.clear();
-	std::cout << "Game State Died" << std::endl;
+}
+
+void GameState::CreateStarfield()
+{
+	std::mt19937 randEngine(time(nullptr));
+	std::uniform_int_distribution<int> randXPick(0,Resources::SCREENWIDTH);
+	std::uniform_int_distribution<int> randYPick(0, Resources::SCREENHEIGHT);
+	std::uniform_int_distribution<int> randSizePick(1, 100);
+	for (int i = 0; i < Resources::NUMSTARS; i++)
+	{	
+		float xPos = randXPick(randEngine);
+		float yPos = randYPick(randEngine);
+		int sizeRoll = randSizePick(randEngine);
+		sf::Color colour;
+		float size = 0;
+		if (sizeRoll > 95)
+		{
+			size = 2.0f;
+			colour = sf::Color(255, 255, 255, 150);
+		}
+		else if (sizeRoll > 75)
+		{
+			size = 1.5f;
+			colour = sf::Color(255, 255, 255, 175);
+		}
+		else
+		{
+			size = 1.0f;
+			colour = sf::Color(255, 255, 255, 200);
+		}
+		sf::CircleShape star(size);
+		star.setPosition(xPos, yPos);
+		star.setFillColor(colour);
+		_stars.push_back(star);
+	}
 }
 
 void GameState::Update(float dt)
@@ -132,19 +166,25 @@ void GameState::Update(float dt)
 
 void GameState::Draw(sf::RenderWindow* wnd)
 {
+	for (auto& s : _stars)
+	{
+		wnd->draw(s);
+	}
+
 	std::string s = "Score:  " + std::to_string(_score);
 	sf::Text scoreText(s, Resources::getFont("SpaceInvaders"), 20);
 	wnd->draw(scoreText);
+
+	for (auto& b : _bullets)
+	{
+		b->Draw(wnd);
+	}
 
 	_player->Draw(wnd);
 	for (auto& a : _aliens)
 	{
 		a->Draw(wnd);
-	}
-	for (auto& b : _bullets)
-	{
-		b->Draw(wnd);
-	}
+	}	
 }
 
 void GameState::Input(sf::Event event)
