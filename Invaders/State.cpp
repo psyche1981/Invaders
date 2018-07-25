@@ -63,22 +63,21 @@ GameState::GameState(GSM* gsm)
 	_updateDelay = 0.8f;
 	float xPos = (Resources::SCREENWIDTH / 2) - (Resources::PLAYERWIDTH / 2);
 	_player = std::make_unique<Player>(vec2f(xPos, 550.0f), vec2f(Resources::PLAYERWIDTH, Resources::PLAYERHEIGHT));
-	//_entities.emplace_back(std::make_unique<Alien>(vec2f(500.0f, 100.0f), vec2f(Resources::ALIENSIZE, Resources::ALIENSIZE)));
 	for (int i = 0; i < 9; i++)
 	{
-		_aliens.emplace_back(std::make_unique<Alien>(vec2f(100.0f + i * 70.0f, 60.0f), vec2f(Resources::ALIENSIZE, Resources::ALIENSIZE), Resources::AlienType::THIRD));
+		_aliens.emplace_back(std::make_unique<Alien>(vec2f(100.0f + i * 70.0f, 60.0f), vec2f(Resources::ALIENSIZE, Resources::ALIENSIZE), AlienType::THIRD));
 
 	}
 	for (int i = 0; i < 9; i++)
 	{
 		for (int j = 0; j < 2; j++)
 		{
-			_aliens.emplace_back(std::make_unique<Alien>(vec2f(100.0f + i * 70.0f, 130.0f + j * 70.0f), vec2f(Resources::ALIENSIZE, Resources::ALIENSIZE), Resources::AlienType::SECOND));
+			_aliens.emplace_back(std::make_unique<Alien>(vec2f(100.0f + i * 70.0f, 130.0f + j * 70.0f), vec2f(Resources::ALIENSIZE, Resources::ALIENSIZE), AlienType::SECOND));
 		}		
 	}
 	for (int i = 0; i < 9; i++)
 	{
-		_aliens.emplace_back(std::make_unique<Alien>(vec2f(100.0f + i * 70.0f, 270.0f), vec2f(34.0f, 41.0f), Resources::AlienType::FIRST));
+		_aliens.emplace_back(std::make_unique<Alien>(vec2f(100.0f + i * 70.0f, 270.0f), vec2f(34.0f, 41.0f), AlienType::FIRST));
 	}
 
 }

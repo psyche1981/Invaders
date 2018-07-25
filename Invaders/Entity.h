@@ -8,6 +8,13 @@
 typedef sf::Vector2f vec2f;
 typedef sf::Rect<float> Rect;
 
+enum AlienType
+{
+	FIRST,
+	SECOND,
+	THIRD
+};
+
 class Entity
 {
 public:
@@ -70,7 +77,7 @@ private:
 class Alien : public Entity
 {
 public:
-	Alien(vec2f pos, vec2f size, Resources::AlienType type);
+	Alien(vec2f pos, vec2f size, AlienType type);
 	virtual ~Alien();
 
 	void Update(float dt);
@@ -86,7 +93,7 @@ public:
 	bool hit();
 
 private:
-	Resources::AlienType _type;
+	AlienType _type;
 	int _scoreValue;
 	int _hitPoints;
 };

@@ -20,7 +20,7 @@ const vec2f& Entity::GetPos()
 	return _pos;
 }
 
-const Rect & Entity::GetBox()
+const Rect& Entity::GetBox()
 {
 	return _boundingBox;
 }
@@ -101,24 +101,24 @@ void Player::ConfineToScreen()
 		_pos.x = Resources::SCREENWIDTH - _boundingBox.width;
 }
 
-Alien::Alien(vec2f pos, vec2f size,Resources::AlienType type)
+Alien::Alien(vec2f pos, vec2f size, AlienType type)
 	:
 	Entity(pos, size),
 	_type(type)
 {
 	switch (_type)
 	{
-	case Resources::AlienType::FIRST:
+	case AlienType::FIRST:
 		_hitPoints = 1;
 		_scoreValue = 20;
 		_sprite = sf::Sprite(Resources::getTexture("Nigs1"));
 		break;
-	case Resources::AlienType::SECOND:
+	case AlienType::SECOND:
 		_hitPoints = 2;
 		_scoreValue = 40;
 		_sprite = sf::Sprite(Resources::getTexture("Nigs2"));
 		break;
-	case Resources::AlienType::THIRD:
+	case AlienType::THIRD:
 		_hitPoints = 3;
 		_scoreValue = 60;
 		_sprite = sf::Sprite(Resources::getTexture("Nigs3"));

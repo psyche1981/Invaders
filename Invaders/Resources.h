@@ -32,12 +32,7 @@ public:
 	static constexpr float DELAYFACTOR = 0.80f;
 	static constexpr float ALIENYINCREMENT = 20.0f;
 
-	enum AlienType
-	{
-		FIRST,
-		SECOND,
-		THIRD
-	};
+	
 
 private:	
 	Resources() {}
