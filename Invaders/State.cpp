@@ -66,14 +66,14 @@ GameState::GameState(GSM* gsm)
 	//_entities.emplace_back(std::make_unique<Alien>(vec2f(500.0f, 100.0f), vec2f(Resources::ALIENSIZE, Resources::ALIENSIZE)));
 	for (int i = 0; i < 9; i++)
 	{
-		//_aliens.emplace_back(std::make_unique<Alien>(vec2f(100.0f + i * 70.0f, 60.0f), vec2f(Resources::ALIENSIZE, Resources::ALIENSIZE), Resources::AlienType::THIRD));
+		_aliens.emplace_back(std::make_unique<Alien>(vec2f(100.0f + i * 70.0f, 60.0f), vec2f(Resources::ALIENSIZE, Resources::ALIENSIZE), Resources::AlienType::THIRD));
 
 	}
 	for (int i = 0; i < 9; i++)
 	{
 		for (int j = 0; j < 2; j++)
 		{
-			//_aliens.emplace_back(std::make_unique<Alien>(vec2f(100.0f + i * 70.0f, 130.0f + j * 70.0f), vec2f(Resources::ALIENSIZE, Resources::ALIENSIZE), Resources::AlienType::SECOND));
+			_aliens.emplace_back(std::make_unique<Alien>(vec2f(100.0f + i * 70.0f, 130.0f + j * 70.0f), vec2f(Resources::ALIENSIZE, Resources::ALIENSIZE), Resources::AlienType::SECOND));
 		}		
 	}
 	for (int i = 0; i < 9; i++)
