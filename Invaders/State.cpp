@@ -264,8 +264,6 @@ void GameState::UpdateAliens(float dt)
 		std::unique_ptr<Alien>& randAlien = _aliens[randAlienPick(_randEngine)];
 		if (randAlien->GetPos().y == lowestY)
 		{
-			std::cout << "low Y: " << lowestY << std::endl;
-			randAlien->Shoot();
 			vec2f alienPos = randAlien->GetPos();
 			vec2f pos(alienPos.x + Resources::ALIENSIZE / 2, alienPos.y + randAlien->GetBox().height);
 			_alienBullets.emplace_back(std::make_unique<Bullet>(pos, vec2f(0.0f, Resources::BULLETSPEED)));

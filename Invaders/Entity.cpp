@@ -194,12 +194,6 @@ bool Alien::Hit()
 	return _hitPoints == 0;
 }
 
-void Alien::Shoot()
-{
-	std::cout << "X: " << _pos.x << "; Y: " << _pos.y << std::endl;
-
-}
-
 Bullet::Bullet(vec2f pos, vec2f vel)
 	:
 	Entity(pos, vec2f(4.0f, 12.0f), vel)

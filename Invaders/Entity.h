@@ -94,7 +94,6 @@ public:
 	const int GetScoreValue();
 
 	bool Hit();
-	void Shoot();
 
 private:
 	AlienType _type;
