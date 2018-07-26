@@ -52,17 +52,22 @@ private:
 	std::unique_ptr<Player> _player;
 	std::vector<std::unique_ptr<Alien>> _aliens;
 	std::vector<std::unique_ptr<Bullet>> _bullets;
+	std::vector<std::unique_ptr<Bullet>> _alienBullets;
 	std::vector<sf::CircleShape> _stars;
+
+	std::mt19937 _randEngine;
 
 	void CreateStarfield();
 
 	float _updateDelay;
+	float lowestY = 0.0f;
 	bool _gameover = false;
 	int _score = 0;
 
 	void UpdateAliens(float dt);
-	void CheckBulletCollision();
-	bool CheckPlayerCollision(const Rect& box);
+	void CheckBulletAlienCollision();
+	bool CheckPlayerAlienCollision(const Rect& box);
+	void CheckBulletPlayerCollision();
 };
 
 class GameOverScreen : public State

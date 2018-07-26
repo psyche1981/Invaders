@@ -1,10 +1,10 @@
 #include "Entity.h"
 
-Entity::Entity(vec2f pos, vec2f size)
+Entity::Entity(vec2f pos, vec2f size, vec2f vel)
 	:
 	_pos(pos),
 	_boundingBox(Rect(pos, size)),
-	_vel(0.0f, 0.0f),
+	_vel(vel),
 	_rec(size)
 {
 	
@@ -93,6 +93,17 @@ bool Player::BulletFired()
 	return _bulletFired;
 }
 
+bool Player::Hit()
+{
+	_lives -= 1;
+	return _lives == 0;
+}
+
+const int Player::GetLives() const
+{
+	return _lives;
+}
+
 void Player::ConfineToScreen()
 {
 	if (_pos.x < 0.0f)
@@ -177,23 +188,28 @@ const int Alien::GetScoreValue()
 	return _scoreValue;
 }
 
-bool Alien::hit()
+bool Alien::Hit()
 {
 	_hitPoints -= 1;
 	return _hitPoints == 0;
 }
 
-Bullet::Bullet(vec2f pos)
-	:
-	Entity(pos, vec2f(4.0f, 12.0f))
+void Alien::Shoot()
 {
-	_vel.y = -250.0f;
+	std::cout << "X: " << _pos.x << "; Y: " << _pos.y << std::endl;
+
+}
+
+Bullet::Bullet(vec2f pos, vec2f vel)
+	:
+	Entity(pos, vec2f(4.0f, 12.0f), vel)
+{
 	_rec.setPosition(_pos);
 }
 
 Bullet::~Bullet()
 {
-	
+	std::cout << "Bullet Died" << std::endl;
 }
 
 void Bullet::Update(float dt)
@@ -216,5 +232,5 @@ void Bullet::Input(sf::Event event)
 
 bool Bullet::IsOffScreen()
 {
-	return _pos.y < 0;
+	return _pos.y < 0 || _pos.y > Resources::SCREENHEIGHT;
 }

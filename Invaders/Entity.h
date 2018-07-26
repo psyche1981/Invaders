@@ -18,7 +18,7 @@ enum AlienType
 class Entity
 {
 public:
-	Entity(vec2f pos, vec2f size);
+	Entity(vec2f pos, vec2f size, vec2f vel = vec2f(0.0f, 0.0f));
 	virtual ~Entity();
 
 	virtual void Update(float dt) = 0;
@@ -43,7 +43,7 @@ protected:
 class Bullet : public Entity
 {
 public:
-	Bullet(vec2f pos);
+	Bullet(vec2f pos, vec2f vel);
 	virtual ~Bullet();
 	void Update(float dt) override;
 	void Draw(sf::RenderWindow* wnd) override;
@@ -65,12 +65,15 @@ public:
 	void Input(sf::Event event) override;
 
 	bool BulletFired();
+	bool Hit();
+	const int GetLives() const;
 
 private:
 	void ConfineToScreen();
 
 	bool _fireBullet = true;
 	bool _bulletFired = false;
+	int _lives = 3;
 
 };
 
@@ -90,7 +93,8 @@ public:
 	const float GetXVel();
 	const int GetScoreValue();
 
-	bool hit();
+	bool Hit();
+	void Shoot();
 
 private:
 	AlienType _type;

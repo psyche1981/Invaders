@@ -60,6 +60,7 @@ GameState::GameState(GSM* gsm)
 	:
 	State(gsm)
 {
+	_randEngine = std::mt19937(time(nullptr));
 	_updateDelay = 0.8f;
 	float xPos = (Resources::SCREENWIDTH / 2) - (Resources::PLAYERWIDTH / 2);
 	_player = std::make_unique<Player>(vec2f(xPos, 550.0f), vec2f(Resources::PLAYERWIDTH, Resources::PLAYERHEIGHT));
@@ -85,19 +86,19 @@ GameState::GameState(GSM* gsm)
 GameState::~GameState()
 {
 	_aliens.clear();
+	
 }
 
 void GameState::CreateStarfield()
 {
-	std::mt19937 randEngine(time(nullptr));
 	std::uniform_int_distribution<int> randXPick(0,Resources::SCREENWIDTH);
 	std::uniform_int_distribution<int> randYPick(0, Resources::SCREENHEIGHT);
 	std::uniform_int_distribution<int> randSizePick(1, 100);
 	for (int i = 0; i < Resources::NUMSTARS; i++)
 	{	
-		float xPos = randXPick(randEngine);
-		float yPos = randYPick(randEngine);
-		int sizeRoll = randSizePick(randEngine);
+		float xPos = randXPick(_randEngine);
+		float yPos = randYPick(_randEngine);
+		int sizeRoll = randSizePick(_randEngine);
 		sf::Color colour;
 		float size = 0;
 		if (sizeRoll > 95)
@@ -135,6 +136,7 @@ void GameState::Update(float dt)
 			UpdateAliens(dt);
 			elapsed = 0.0f;
 		}
+
 		for (auto bIt = _bullets.begin(); bIt != _bullets.end();)
 		{
 			(*bIt)->Update(dt);
@@ -147,10 +149,26 @@ void GameState::Update(float dt)
 				++bIt;
 			}
 		}
-
-		if (!_bullets.empty() && !_aliens.empty())
+		for (auto bIt = _alienBullets.begin(); bIt != _alienBullets.end();)
 		{
-			CheckBulletCollision();
+			(*bIt)->Update(dt);
+			if ((*bIt)->IsOffScreen())
+			{
+				bIt = _alienBullets.erase(bIt);
+			}
+			else
+			{
+				++bIt;
+			}
+		}
+
+		if (!_bullets.empty())
+		{
+			CheckBulletAlienCollision();
+		}
+		if (!_alienBullets.empty())
+		{
+			CheckBulletPlayerCollision();
 		}
 
 		if (_gameover)
@@ -174,10 +192,17 @@ void GameState::Draw(sf::RenderWindow* wnd)
 	std::string s = "Score:  " + std::to_string(_score);
 	sf::Text scoreText(s, Resources::getFont("SpaceInvaders"), 20);
 	wnd->draw(scoreText);
-
+	s = "Lives: " + std::to_string(_player->GetLives());
+	sf::Text livesText(s, Resources::getFont("SpaceInvaders"), 20);
+	livesText.setPosition(650.0f, 0.0f);
+	wnd->draw(livesText);
 	for (auto& b : _bullets)
 	{
 		b->Draw(wnd);
+	}
+	for (auto& ab : _alienBullets)
+	{
+		ab->Draw(wnd);
 	}
 
 	_player->Draw(wnd);
@@ -194,7 +219,7 @@ void GameState::Input(sf::Event event)
 	{
 		vec2f playerPos = _player->GetPos();
 		vec2f pos(playerPos.x + Resources::PLAYERWIDTH / 2, playerPos.y);
-		_bullets.emplace_back(std::make_unique<Bullet>(pos));
+		_bullets.emplace_back(std::make_unique<Bullet>(pos, vec2f(0.0f, -Resources::BULLETSPEED)));
 	}
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
@@ -208,7 +233,11 @@ void GameState::UpdateAliens(float dt)
 	bool velChange = false;
 	for (auto it = _aliens.begin(); it != _aliens.end(); ++it)
 	{
-		if (CheckPlayerCollision((*it)->GetBox()))
+		if ((*it)->GetPos().y > lowestY)
+		{
+			lowestY = (*it)->GetPos().y;
+		}
+		if (CheckPlayerAlienCollision((*it)->GetBox()))
 		{
 			_gameover = true;
 		}
@@ -222,6 +251,17 @@ void GameState::UpdateAliens(float dt)
 			}
 			break;
 		}		
+	}
+
+	std::uniform_int_distribution<int> randAlienPick(0, _aliens.size() -1);
+	std::unique_ptr<Alien>& randAlien = _aliens[randAlienPick(_randEngine)];
+	if (randAlien->GetPos().y == lowestY)
+	{
+		std::cout << "low Y: " <<lowestY << std::endl;
+		randAlien->Shoot();
+		vec2f alienPos = randAlien->GetPos();
+		vec2f pos(alienPos.x + Resources::ALIENSIZE / 2, alienPos.y + randAlien->GetBox().height);
+		_alienBullets.emplace_back(std::make_unique<Bullet>(pos, vec2f(0.0f, Resources::BULLETSPEED)));
 	}
 
 	if (!_gameover)
@@ -248,7 +288,7 @@ void GameState::UpdateAliens(float dt)
 	}
 }
 
-void GameState::CheckBulletCollision()
+void GameState::CheckBulletAlienCollision()
 {	
 	bool collided = false;
 	for (auto aIt = _aliens.begin(); aIt != _aliens.end();)
@@ -269,7 +309,7 @@ void GameState::CheckBulletCollision()
 		}
 		if (collided)
 		{			
-			if ((*aIt)->hit())
+			if ((*aIt)->Hit())
 			{
 				_score += (*aIt)->GetScoreValue();
 				aIt = _aliens.erase(aIt);
@@ -283,11 +323,33 @@ void GameState::CheckBulletCollision()
 	}
 }
 
-bool GameState::CheckPlayerCollision(const Rect& box)
+bool GameState::CheckPlayerAlienCollision(const Rect& box)
 {
 	vec2f pos = _player->GetPos();
 	float width = _player->GetBox().width;
 	return (box.top + box.height > pos.y) && (box.left > pos.x) && box.left < pos.x + width;
+}
+
+void GameState::CheckBulletPlayerCollision()
+{
+	bool collided = false;
+	for (auto bIt = _alienBullets.begin(); bIt != _alienBullets.end();)
+	{
+		collided = false;
+		if (_player->GetBox().contains((*bIt)->GetPos()))
+		{
+			collided = true;
+			bIt = _alienBullets.erase(bIt);
+			if (_player->Hit())
+			{
+				_gameover = true;
+			}
+		}
+		else
+		{
+			++bIt;
+		}
+	}
 }
 
 GameOverScreen::GameOverScreen(GSM* gsm)

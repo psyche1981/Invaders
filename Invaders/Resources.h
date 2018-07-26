@@ -31,6 +31,7 @@ public:
 	static constexpr float ALIENSPEED = 25.0f;
 	static constexpr float DELAYFACTOR = 0.80f;
 	static constexpr float ALIENYINCREMENT = 20.0f;
+	static constexpr float BULLETSPEED = 250.0f;
 	static constexpr int NUMSTARS = 150;
 	
 
