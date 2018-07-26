@@ -217,9 +217,12 @@ void GameState::Input(sf::Event event)
 	_player->Input(event);
 	if (_player->BulletFired())
 	{
-		vec2f playerPos = _player->GetPos();
-		vec2f pos(playerPos.x + Resources::PLAYERWIDTH / 2, playerPos.y);
-		_bullets.emplace_back(std::make_unique<Bullet>(pos, vec2f(0.0f, -Resources::BULLETSPEED)));
+		if (_bullets.size() <= 5)
+		{
+			vec2f playerPos = _player->GetPos();
+			vec2f pos(playerPos.x + Resources::PLAYERWIDTH / 2, playerPos.y);
+			_bullets.emplace_back(std::make_unique<Bullet>(pos, vec2f(0.0f, -Resources::BULLETSPEED)));
+		}
 	}
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
