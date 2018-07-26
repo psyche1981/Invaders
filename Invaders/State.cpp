@@ -231,12 +231,16 @@ void GameState::Input(sf::Event event)
 void GameState::UpdateAliens(float dt)
 {	
 	bool velChange = false;
+	lowestY = 0.0f;
 	for (auto it = _aliens.begin(); it != _aliens.end(); ++it)
 	{
 		if ((*it)->GetPos().y > lowestY)
 		{
 			lowestY = (*it)->GetPos().y;
 		}
+	}
+	for (auto it = _aliens.begin(); it != _aliens.end(); ++it)
+	{		
 		if (CheckPlayerAlienCollision((*it)->GetBox()))
 		{
 			_gameover = true;
